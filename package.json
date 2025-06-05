@@ -14,8 +14,13 @@
   "type": "commonjs",
   "description": "",
   "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "fs-extra": "^11.3.0",
+    "simple-git": "^3.27.0"
   }
 }
