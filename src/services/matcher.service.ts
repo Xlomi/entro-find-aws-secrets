@@ -1,5 +1,6 @@
 const accessKeyIdRegex = /AKIA[0-9A-Z]{16}/g; // TODO: I saw some options with ASIA. Need to check
-const secretAccessKeyRegex = /[0-9a-zA-Z/+]{40}/g; // TODO: Found this regex in several blogs but I think it is too simplistic maybe need to add more checks
+const secretAccessKeyRegex =
+  /(?:aws.*secret.*access.*key[^a-zA-Z0-9]{0,5})?['":= ]?([0-9a-zA-Z/+]{40})/i;
 
 export interface MatchResult {
   line: string;
@@ -21,8 +22,10 @@ export function matchSecrets(diff: string): MatchResult[] {
     const accessKeys = line.match(accessKeyIdRegex);
     if (accessKeys) matches.push(...accessKeys);
 
-    const secretKeys = line.match(secretAccessKeyRegex);
-    if (secretKeys) matches.push(...secretKeys);
+    const secretMatch = secretAccessKeyRegex.exec(line);
+    if (secretMatch && secretMatch[1]) {
+      matches.push(secretMatch[1]);
+    }
 
     if (matches.length > 0) {
       results.push({ line, matched: matches });
