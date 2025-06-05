@@ -32,12 +32,11 @@ export async function scanRepo(repoUrl: string): Promise<SecretFinding[]> {
     const diff = await repo.show([commit.hash]);
 
     const matches = matchSecrets(diff);
-    for (const { matched } of matches) {
-      console.log(`Found secrets in commit ${commit.hash}: ${matched.join(', ')}`);
+    for (const { matched, file, lineNumber } of matches) {
       findings.push({
         secret: matched.join(', '),
-        file: 'unknown', // TODO: get file name from diff
-        line: -1, // TODO: get line number from diff
+        file,
+        line: lineNumber,
         commit: commit.hash,
         author: commit.author_email,
       });
